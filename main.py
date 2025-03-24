@@ -1,11 +1,13 @@
-﻿from fastapi import FastAPI, File, UploadFile, HTTPException
+﻿import os
+
+from fastapi import FastAPI, File, UploadFile, HTTPException
 from pydantic import BaseModel
 import motor.motor_asyncio
 
 app = FastAPI()
-
+mongo_uri = os.getenv("MONGO_URI")
 # Connect to Mongo Atlas
-client = motor.motor_asyncio.AsyncIOMotorClient("mongodb+srv://admin:XyZ4sHrUG6IuKcRM@db-home.2ikjt.mongodb.net/?retryWrites=true&w=majority&appName=DB-Home")
+client = motor.motor_asyncio.AsyncIOMotorClient(mongo_uri)
 db = client.multimedia_db
 
 class PlayerScore(BaseModel):
