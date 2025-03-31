@@ -51,3 +51,18 @@ async def add_score(score: PlayerScore,db=Depends(get_database)):
     score_doc = score.dict()
     result = await db.scores.insert_one(score_doc)
     return {"message": "Score recorded", "id": str(result.inserted_id)}
+
+@app.get("/get_sprite")
+async def get_sprites(sprite_name:str,db=Depends(get_database)):
+    sprites = await db.sprites.find_one({"filename": sprite_name})
+    return {"filename": sprites["filename"]}
+
+@app.get("/get_audio_files")
+async def get_audio_files(audio_name:str,db=Depends(get_database)):
+    audio_files = await db.audio.find_one({"filename": audio_name})
+    return {"filename": audio_files["filename"]}
+
+@app.get("/get_player_scores")
+async def get_player_scores(player_name:str,db=Depends(get_database)):
+    player_scores = await db.scores.find_one({"player_name": player_name})
+    return {"player_name": player_scores["player_name"], "score": player_scores["score"]}
