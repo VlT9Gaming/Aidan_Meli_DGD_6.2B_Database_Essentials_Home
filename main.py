@@ -47,9 +47,14 @@ class PlayerScore(BaseModel):
 @app.get("/")
 async def root():
     return {"message": "Hello World"}
+
+ALLOWED_SPRITE_TYPES = ["image/jpeg", "image/png", "image/jpg"]
+ALLOWED_AUDIO_TYPES = ["audio/mpeg", "audio/ogg"]
 @app.post("/upload_sprite")
 async def upload_sprite(file: UploadFile = File(...), db=Depends(get_database)):
     content = await file.read()
+    if file.content_type not in ALLOWED_SPRITE_TYPES:
+        raise HTTPException(status_code=400, detail="Invalid file type for sprite")
     encoded_content = base64.b64encode(content).decode('utf-8')
     sprite_doc = {"filename": file.filename, "content": encoded_content}
     result = await db.sprites.insert_one(sprite_doc)
@@ -58,6 +63,8 @@ async def upload_sprite(file: UploadFile = File(...), db=Depends(get_database)):
 @app.post("/upload_audio")
 async def upload_audio(file: UploadFile = File(...), db=Depends(get_database)):
     content = await file.read()
+    if file.content_type not in ALLOWED_AUDIO_TYPES:
+        raise HTTPException(status_code=400, detail="Invalid file type for audio")
     encoded_content = base64.b64encode(content).decode('utf-8')
     audio_doc = {"filename": file.filename, "content": encoded_content}
     result = await db.audio.insert_one(audio_doc)
