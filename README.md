@@ -116,6 +116,3 @@ This project is a FastAPI-based application that allows users to upload and retr
 - **Request:**
   - `player_name`: The name of the player whose scores to retrieve
 
-## License
-
-This project is licensed under the MIT License.
