@@ -12,18 +12,6 @@ app = FastAPI()
 load_dotenv()
 mongo_uri = os.getenv("MONGO_URI")
 
-def object_id_to_str(obj):
-    if isinstance(obj, ObjectId):
-        return str(obj)
-    if isinstance(obj, list):
-        return [object_id_to_str(item) for item in obj]
-    if isinstance(obj, dict):
-        return {key: object_id_to_str(value) for key, value in obj.items()}
-    return obj
-def decode_base64_content(doc):
-    if "content" in doc:
-        doc["content"] = base64.b64decode(doc["content"])
-    return doc
 
 # Connect to Mongo Atlas
 # Database connection as a dependency
