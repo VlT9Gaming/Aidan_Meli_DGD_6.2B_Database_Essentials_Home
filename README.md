@@ -1,118 +1,106 @@
-# Multimedia Upload and Retrieval API
+# Audio and Sprite Management API
 
-This project is a FastAPI-based application that allows users to upload and retrieve multimedia files (sprites and audio) and player scores. The files are stored in a MongoDB database.
+This FastAPI application provides a backend service for uploading, storing, and retrieving audio files and sprites (images) from a MongoDB database. It's designed to be deployed on Vercel.
 
-## Setup
+## Features
 
-### Prerequisites
+- Upload sprite files (JPEG, PNG)
+- Upload audio files (MP3, OGG)
+- Store player scores
+- Retrieve sprites by filename
+- Retrieve audio files by filename
+- Retrieve player scores by player name
 
-- Python 3.8 or higher
+## Prerequisites
+
+- Python 3.8+
 - MongoDB Atlas account
-- Vercel account
+- Vercel account (for deployment)
 
-### Installation
+## Local Setup
 
-1. Clone the repository:
+### 1. Clone the repository
 
-    ```sh
-    git clone https://github.com/yourusername/yourrepository.git
-    cd yourrepository
-    ```
+```bash
+git clone <repository-url>
+cd <project-directory>
+```
 
-2. Create a virtual environment and activate it:
+### 2. Create a virtual environment
 
-    ```sh
-    python -m venv venv
-    source venv/bin/activate  # On Windows use `venv\Scripts\activate`
-    ```
+```bash
+python -m venv venv
+# On Windows
+venv\Scripts\activate
+# On macOS/Linux
+source venv/bin/activate
+```
 
-3. Install the required packages:
+### 3. Install dependencies
 
-    ```sh
-    pip install -r requirements.txt
-    ```
+```bash
+pip install -r requirements.txt
+```
 
-4. Create a `.env` file in the root directory and add your MongoDB URI:
-### Running the Application
+### 4. Configure environment variables
 
-1. Start the FastAPI server:
+Create a `.env` file in the project root with your MongoDB connection string:
 
-    ```sh
-    uvicorn main:app --reload
-    ```
+### 5. Run the application
 
-2. The application will be available at `http://127.0.0.1:8000`.
+```bash
+uvicorn main:app --reload
+```
 
-### Deployment
+The API will be available at [http://localhost:8000](http://localhost:8000)
 
-1. Create a `vercel.json` file in the root directory with the following content:
+## API Documentation
 
-    ```json
-    {
-     "version": 2,
-     "builds": [
-     {
-     "src": "main.py",
-     "use": "@vercel/python"
-     }
-     ],
-     "routes": [
-     {
-     "src": "/(.*)",
-     "dest": "main.py"
-     }
-     ]
-    }
-    ```
-
-2. Deploy the application to Vercel:
-
-    ```sh
-    vercel
-    ```
+Once the server is running, access the interactive API documentation at:
+- Swagger UI: [http://localhost:8000/docs](http://localhost:8000/docs)
+- ReDoc: [http://localhost:8000/redoc](http://localhost:8000/redoc)
 
 ## API Endpoints
 
-### Upload Sprite
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/` | GET | Test endpoint returning a welcome message |
+| `/upload_sprite` | POST | Upload a sprite image (JPEG, PNG) |
+| `/upload_audio` | POST | Upload an audio file (MP3, OGG) |
+| `/player_score` | POST | Add a player's score |
+| `/get_sprite` | GET | Retrieve a sprite by name |
+| `/get_audio_files` | GET | Retrieve an audio file by name |
+| `/get_player_scores` | GET | Retrieve a player's scores by name |
 
-- **URL:** `/upload_sprite`
-- **Method:** `POST`
-- **Request:**
-  - `file`: The sprite file to upload (allowed types: `image/jpeg`, `image/png`, `image/jpg`)
+## Deployment to Vercel
 
-### Upload Audio
+### 1. Install Vercel CLI
 
-- **URL:** `/upload_audio`
-- **Method:** `POST`
-- **Request:**
-  - `file`: The audio file to upload (allowed types: `audio/mpeg`, `audio/ogg`)
+```bash
+npm i -g vercel
+```
 
-### Add Player Score
+### 2. Deploy
 
-- **URL:** `/player_score`
-- **Method:** `POST`
-- **Request:**
-  - `player_name`: The name of the player
-  - `score`: The score of the player
+```bash
+vercel
+```
 
-### Get Sprite
+Follow the prompts to link your project to Vercel.
 
-- **URL:** `/get_sprite`
-- **Method:** `GET`
-- **Request:**
-  - `sprite_name`: The name of the sprite file to retrieve
+### 3. Configure Environment Variables
 
-### Get Audio Files
+Add your `MONGO_URI` in the Vercel project settings.
 
-- **URL:** `/get_audio_files`
-- **Method:** `GET`
-- **Request:**
-  - `audio_name`: The name of the audio file to retrieve
+## Project Structure
 
-### Get Player Scores
+- `main.py`: Main application file containing all API endpoints
+- `requirements.txt`: Python dependencies
+- `vercel.json`: Vercel deployment configuration
+- `.env`: Environment variables (not committed to version control)
 
-- **URL:** `/get_player_scores`
-- **Method:** `GET`
-- **Request:**
-  - `player_name`: The name of the player whose scores to retrieve
+## Troubleshooting
 
+- If you encounter a "422 Unprocessable Content" error when uploading files, check that your client is correctly sending the file as `multipart/form-data`.
+- For "UnicodeDecodeError" when retrieving files, ensure the file content is properly base64 encoded before storage and decoded after retrieval.
+- Ensure your MongoDB connection string in the environment variables is correct and your network allows connections to MongoDB Atlas.
